@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EchoFlux</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      transition: background 0.5s, color 0.5s;
+    }
+    .dark-mode {
+      background-color: #121212;
+      color: #ffffff;
+    }
+    header {
+      width: 100%;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .dark-mode header {
+      background-color: #1e1e1e;
+    }
+    .nav-links {
+      display: flex;
+      gap: 15px;
+    }
+    .nav-links button {
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .login-box, .profile-box, .oval-profile, .post-box {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+    }
+    .dark-mode .login-box, .dark-mode .profile-box, .dark-mode .oval-profile, .dark-mode .post-box {
+      background: #1e1e1e;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .post-box img {
+      width: 100%;
+      border-radius: 10px;
+      transition: transform 0.3s ease;
+    }
+    .post-box img:hover {
+      transform: scale(1.02);
+    }
+    .engagement, .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .engagement button {
+      width: auto;
+      background-color: transparent;
+      color: inherit;
+      border: none;
+      font-size: 18px;
+    }
+    .engagement button:hover {
+      color: #3498db;
+    }
+    .divider {
+      width: 100%;
+      height: 1px;
+      background-color: #ccc;
+      margin-top: 20px;
+    }
+    .dark-mode .divider {
+      background-color: #444;
+    }
+    .comments {
+      margin-top: 10px;
+      font-style: italic;
+      color: #555;
+    }
+    .dark-mode .comments {
+      color: #aaa;
+    }
+    .profile-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .oval-profile {
+      width: 300px;
+      padding: 30px 20px;
+      border-radius: 50% / 35%;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .oval-profile img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 768px) {
+      .profile-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .oval-profile {
+        border-radius: 20px;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-links">
+      <button onclick="showHomePage()">Home</button>
+      <button onclick="alert('Contact us at anuragkumar726007@gmail.com')">Contact Us</button>
+    </div>
+    <div class="nav-links">
+      <button id="toggleMode">🌙 Mode</button>
+      <button onclick="window.location.reload()">🚪 Sign Out</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="login-box" id="loginBox">
+      <h2>Login</h2>
+      <input type="text" placeholder="Username" id="username" required />
+      <input type="tel" placeholder="Phone Number" id="phone" required />
+      <input type="email" placeholder="Email" id="email" required />
+      <input type="password" placeholder="Password" id="password" required />
+      <input type="password" placeholder="Confirm Password" id="confirmPassword" required />
+      <button onclick="login()">Login</button>
+    </div>
+    <footer>
+      <h1>
+         <p>&#169; 2025 EchoFlux(Created by Anurag Kumar) , All right reserved.</p>
+         </h1>
+    </footer>
+     
+
+    <div class="profile-box" id="profileBox" style="display:none;">
+      <h2>Create Your Profile</h2>
+      <input type="text" id="profileName" placeholder="Your Name" />
+      <textarea id="bio" placeholder="Your Bio" rows="3"></textarea>
+      <input type="file" id="profilePicture" accept="image/*" />
+      <button onclick="createProfile()">Create Profile</button>
+    </div>
+
+    <div class="profile-container" id="profileLayout" style="display:none;">
+      <div class="oval-profile" id="userProfile">
+        <img id="profileImage" src="" alt="Profile Picture" />
+        <h2 id="userName">Your Name</h2>
+        <p id="userBio">Your Bio</p>
+        <button onclick="editProfile()">Edit Profile</button>
+      </div>
+
+
+
+      <div class="post-box" id="postBox">
+        <img id="postImage" src="" alt="Post Image" />
+        <h3 id="postTitle">Post Title</h3>
+        <p id="postDesc">Post Description</p>
+        <p class="comments" id="postComment">Comment will appear here</p>
+
+        <div class="engagement">
+          <button onclick="likePost()">❤️ Like</button>
+          <button onclick="sharePost()">🔄 Share</button>
+          <button onclick="toggleCommentBox()">💬 Comment</button>
+        </div>
+
+        <div id="commentBox" style="display:none; margin-top:10px;">
+          <input type="text" id="commentInput" placeholder="Write a comment..." />
+          <button onclick="submitComment()">Post Comment</button>
+        </div>
+
+        <div class="actions">
+          <button onclick="prevPost()">Previous</button>
+          <button onclick="nextPost()">Next</button>
+        </div>
+        <div class="divider"></div>
+      </div>
+    </div>
+  </div>
+ 
+
+  <script>
+    let currentPost = 0;
+    const totalPosts = 100;
+    const posts = Array.from({ length: totalPosts }, (_, i) => ({
+      image: `https://picsum.photos/600/400?random=${i + 1}`,
+      title: `Post #${i + 1}`,
+      desc: `This is an inspiring post with a unique vibe for number ${i + 1}`,
+      comment: [
+        "Love the vibe!",
+        "This post is lit 🔥",
+        "Such a cool photo!",
+        "Feeling this one 💯",
+        "Artistic and bold!",
+        "Inspiring click!",
+        "That view is stunning!",
+        "Absolutely iconic",
+        "Just wow 😍",
+        "So peaceful"
+      ][i % 10]
+    }));
+
+    function login() {
+      const pass = document.getElementById("password").value;
+      const confirm = document.getElementById("confirmPassword").value;
+      if (pass !== confirm) return alert("Passwords do not match!");
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("profileBox").style.display = "block";
+    }
+
+    function createProfile() {
+      const name = document.getElementById("profileName").value;
+      const bio = document.getElementById("bio").value;
+      const profilePicture = document.getElementById("profilePicture").files[0];
+
+      if (!name || !bio) {
+        alert("Please fill in all the fields");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        document.getElementById("profileImage").src = e.target.result;
+        document.getElementById("userName").innerText = name;
+        document.getElementById("userBio").innerText = bio;
+        document.getElementById("profileBox").style.display = "none";
+        document.getElementById("profileLayout").style.display = "flex";
+        document.getElementById("postBox").style.display = "block";
+        showPost(currentPost);
+      };
+
+      if (profilePicture) {
+        reader.readAsDataURL(profilePicture);
+      } else {
+        document.getElementById("profileLayout").style.display = "flex";
+        document.getElementById("postBox").style.display = "block";
+        showPost(currentPost);
+      }
+    }
+
+    function editProfile() {
+      document.getElementById("profileBox").style.display = "block";
+      document.getElementById("profileLayout").style.display = "none";
+    }
+
+    function showHomePage() {
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("profileBox").style.display = "block";
+      document.getElementById("profileLayout").style.display = "none";
+    }
+
+    function showPost(index) {
+      const post = posts[index];
+      document.getElementById("postImage").src = post.image;
+      document.getElementById("postTitle").innerText = post.title;
+      document.getElementById("postDesc").innerText = post.desc;
+      document.getElementById("postComment").innerText = post.comment;
+    }
+
+    function nextPost() {
+      currentPost = (currentPost + 1) % totalPosts;
+      showPost(currentPost);
+    }
+
+    function prevPost() {
+      currentPost = (currentPost - 1 + totalPosts) % totalPosts;
+      showPost(currentPost);
+    }
+
+    function likePost() {
+      alert("You liked this post!");
+    }
+
+    function sharePost() {
+      navigator.clipboard.writeText(window.location.href)
+        .then(() => alert("Post link copied to clipboard!"))
+        .catch(() => alert("Couldn't copy link."));
+    }
+
+    function toggleCommentBox() {
+      const box = document.getElementById("commentBox");
+      box.style.display = box.style.display === "none" ? "block" : "none";
+    }
+
+    function submitComment() {
+      const comment = document.getElementById("commentInput").value.trim();
+      if (!comment) {
+        alert("Please enter a comment!");
+        return;
+      }
+      document.getElementById("postComment").innerText = comment;
+      document.getElementById("commentInput").value = "";
+      document.getElementById("commentBox").style.display = "none";
+    }
+
+    document.getElementById("toggleMode").addEventListener("click", () => {
+      document.body.classList.toggle("dark-mode");
+    });
+  </script>
+
+
+
+</body>
+</html>
